@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+.vercel/
+*.tsbuildinfo
+
+# Secrets — never commit. See .env.example for the shape.
+.env
+.env.*
+!.env.example
+
+# Local throwaway Postgres cluster (scripts/dev_db.sh)
+.devdb/
+
+# Local media / scratch
+*.log
+.DS_Store
+
+# Throwaway render comparisons (scripts/build-media)
+media-preview/
+
+# Video masters — large, kept out of git. See frontend/scripts/build-media.sh
+media-src/
+
+# Database
+*.db
+*.sqlite3
+

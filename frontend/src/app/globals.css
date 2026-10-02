@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+/* Design tokens ported from the theme concept in ../ new-frontend/style.css.
+   Kept as Tailwind v4 @theme so they are available as utilities (bg-gold,
+   text-ink, border-line) rather than raw CSS variables scattered in markup. */
+@theme {
+  --font-display: var(--font-cinzel), Georgia, serif;
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-script: var(--font-pinyon), cursive;
+
+  /* KLUR-inspired warm greige stone luxury palette */
+  --color-ivory: #EBE8E3;
+  --color-cream: #F4F1EA;
+  --color-ink: #1A1816;
+  --color-editorial: #1A1816;
+  --color-muted: #5B564F;
+  --color-faint: #8C857B;
+  --color-line: rgba(26, 24, 22, 0.14);
+
+  --color-gold: #9E8056;
+  --color-gold-vivid: #B8925A;
+  --color-gold-antique: #7A6240;
+  --color-gold-soft: #DFD9CE;
+  --color-gold-line: rgba(158, 128, 86, 0.3);
+
+  --color-ok: #2A6E48;
+  --color-warn: #8A5A00;
+  --color-warn-soft: #EFE7D8;
+
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  background: var(--color-ivory);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Prices and weights line up column-wise wherever they appear. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+
+/* Cinzel — all-caps Roman capitals. Only for short headings; it is unreadable
+   in running text. */
+.roman {
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+}
+
+.script {
+  font-family: var(--font-script);
+}
+
+.eyebrow {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+}
+
+.gold-text {
+  background: linear-gradient(135deg, #6b552f 0%, #9d7a46 50%, #c5a880 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
