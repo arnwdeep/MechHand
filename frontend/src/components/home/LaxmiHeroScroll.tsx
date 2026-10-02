@@ -9,12 +9,13 @@ interface LaxmiHeroScrollProps {
 }
 
 export default function LaxmiHeroScroll({
-  videoSrc = "/media/hero/laxmihero.mp4",
-  scrollVh = 240,
+  videoSrc = "/media/hero/lv_0_20261003011808.mp4",
+  scrollVh = 260,
 }: LaxmiHeroScrollProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [progress, setProgress] = useState(0);
+  const [isVideoReady, setIsVideoReady] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -23,24 +24,33 @@ export default function LaxmiHeroScroll({
 
     video.muted = true;
     video.playsInline = true;
-    video.currentTime = 0.001;
+    video.pause();
 
     let targetTime = 0;
     let isSeeking = false;
     let rafId: number;
 
-    const onLoadedMetadata = () => {
-      video.currentTime = 0.001;
+    const handleReady = () => {
+      setIsVideoReady(true);
+      if (video.currentTime === 0) {
+        video.currentTime = 0.001;
+      }
     };
 
-    video.addEventListener("loadedmetadata", onLoadedMetadata);
+    video.addEventListener("loadedmetadata", handleReady);
+    video.addEventListener("canplay", handleReady);
+    video.addEventListener("loadeddata", handleReady);
+
+    if (video.readyState >= 2) {
+      handleReady();
+    }
 
     const seekVideo = () => {
       if (!video || !Number.isFinite(video.duration) || video.duration <= 0) return;
       if (isSeeking) return;
 
       const diff = Math.abs(targetTime - video.currentTime);
-      if (diff > 0.02) {
+      if (diff > 0.015) {
         isSeeking = true;
         try {
           if (
@@ -69,12 +79,13 @@ export default function LaxmiHeroScroll({
 
       const rect = section.getBoundingClientRect();
       const scrollableHeight = rect.height - window.innerHeight;
-      const p = scrollableHeight > 0 ? Math.min(1, Math.max(0, -rect.top / scrollableHeight)) : 0;
+      const rawProgress = scrollableHeight > 0 ? -rect.top / scrollableHeight : 0;
+      const p = Math.min(1, Math.max(0, rawProgress));
 
       setProgress(p);
 
-      const maxTime = Math.max(0, video.duration - 0.05);
-      targetTime = p * maxTime;
+      const maxDuration = Math.max(0, video.duration - 0.05);
+      targetTime = p * maxDuration;
 
       if (!isSeeking) {
         seekVideo();
@@ -90,10 +101,12 @@ export default function LaxmiHeroScroll({
 
     return () => {
       cancelAnimationFrame(rafId);
-      video.removeEventListener("loadedmetadata", onLoadedMetadata);
+      video.removeEventListener("loadedmetadata", handleReady);
+      video.removeEventListener("canplay", handleReady);
+      video.removeEventListener("loadeddata", handleReady);
       video.removeEventListener("seeked", onSeeked);
     };
-  }, []);
+  }, [videoSrc]);
 
   return (
     <section
@@ -102,23 +115,25 @@ export default function LaxmiHeroScroll({
       className="relative w-full bg-[#FAF8F5] text-[#1A1816]"
       style={{ height: `${scrollVh}vh` }}
     >
-      {/* Sticky Fullscreen Viewport - Clean, Raw, No Shadows */}
+      {/* Sticky Fullscreen Viewport */}
       <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center">
-        {/* Fullscreen Video without shadow or vignette overlays */}
+        {/* Fullscreen Video */}
         <video
           ref={videoRef}
           src={videoSrc}
           preload="auto"
           muted
           playsInline
-          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+          className={`absolute inset-0 w-full h-full object-cover object-center pointer-events-none transition-opacity duration-700 ${
+            isVideoReady ? "opacity-100" : "opacity-0"
+          }`}
         />
 
         {/* Phase 1: Editorial Overlay (0% - 45% scroll) */}
         <div
           className="absolute bottom-10 sm:bottom-14 left-6 sm:left-12 lg:left-16 z-20 transition-all duration-700 pointer-events-auto"
           style={{
-            opacity: progress < 0.55 ? 1 - progress * 1.8 : 0,
+            opacity: progress < 0.5 ? 1 - progress * 2 : 0,
             transform: `translateY(${progress * 40}px)`,
           }}
         >
@@ -166,14 +181,20 @@ export default function LaxmiHeroScroll({
           </p>
         </div>
 
-        {/* Minimal Bottom Scroll Indicator */}
+        {/* Minimal Bottom Scroll Indicator & Progress Bar */}
         <div
-          className="absolute bottom-4 inset-x-0 flex justify-center z-20 pointer-events-none transition-opacity duration-500"
-          style={{ opacity: progress < 0.15 ? 1 : 0 }}
+          className="absolute bottom-4 inset-x-0 flex flex-col items-center justify-center gap-2 z-20 pointer-events-none transition-opacity duration-500 px-6"
+          style={{ opacity: progress < 0.95 ? 1 : 0 }}
         >
           <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-[#1A1816]/60 font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-[#1A1816] animate-pulse" />
             <span>Scroll to Animate</span>
+          </div>
+          <div className="w-28 sm:w-36 h-[2px] bg-black/10 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-[#1A1816] transition-all duration-75"
+              style={{ width: `${Math.min(100, progress * 100)}%` }}
+            />
           </div>
         </div>
       </div>

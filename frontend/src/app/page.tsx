@@ -129,8 +129,8 @@ export default async function HomePage() {
 
   return (
     <div className="w-full bg-[#FAF8F5] text-[#1A1816] selection:bg-[#9E8056] selection:text-white">
-      {/* 1. Full Screen Scroll-to-Animate Hero with laxmihero.mp4 */}
-      <LaxmiHeroScroll videoSrc="/media/hero/laxmihero.mp4" scrollVh={240} />
+      {/* 1. Full Screen Scroll-to-Animate Hero with newly added MP4 */}
+      <LaxmiHeroScroll videoSrc="/media/hero/lv_0_20261003011808.mp4" scrollVh={260} />
 
       {/* 2. Product Row 1: 4-Column Hairline Editorial Matrix */}
       <EditorialProductGrid items={dynamicRow1} />
