@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart";
@@ -15,33 +15,58 @@ const NAV_LINKS = [
 
 export default function Header() {
   const pathname = usePathname();
+  const isHome = pathname === "/";
+  const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { totalCount, openDrawer } = useCart();
 
+  useEffect(() => {
+    const handleScroll = () => {
+      // Over the homepage hero video (first ~120vh), keep light styling
+      const y = window.scrollY || 0;
+      setIsScrolled(y > (isHome ? window.innerHeight * 1.6 : 30));
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isHome]);
+
+  const isDarkHero = isHome && !isScrolled;
+
+  const textColor = isDarkHero ? "text-white" : "text-[#1A1816]";
+  const strokeColor = isDarkHero ? "stroke-white" : "stroke-[#1A1816]";
+  const badgeBg = isDarkHero ? "bg-white text-[#1A1816]" : "bg-[#1A1816] text-[#FAF8F5]";
+  const headerBg = isScrolled
+    ? "bg-[#FAF8F5]/90 backdrop-blur-md border-b border-black/10 shadow-xs"
+    : "bg-transparent";
+
   return (
-    <header className="absolute top-0 inset-x-0 z-40 bg-transparent text-[#1A1816] pointer-events-auto">
-      <div className="w-full px-5 sm:px-8 md:px-10 py-5 sm:py-6 flex items-center justify-between gap-4">
-        {/* Left: Bold Brand Logo (No background, exact Reike Nen placement) */}
+    <header
+      className={`fixed top-0 inset-x-0 z-50 ${headerBg} ${textColor} transition-all duration-300 pointer-events-auto`}
+    >
+      <div className="w-full px-5 sm:px-8 md:px-10 py-4 sm:py-5 flex items-center justify-between gap-4">
+        {/* Left: Bold Luxury Brand Title */}
         <div className="flex items-center shrink-0">
           <Link
             href="/"
-            className="text-lg sm:text-xl md:text-2xl font-black tracking-tight text-[#1A1816] hover:opacity-80 transition-opacity font-serif uppercase select-none drop-shadow-xs"
+            className={`text-lg sm:text-xl md:text-2xl font-black tracking-tight ${textColor} hover:opacity-80 transition-opacity font-serif uppercase select-none drop-shadow-xs`}
             style={{ letterSpacing: "-0.04em", lineHeight: "1" }}
           >
             Shree Rani Gehna
           </Link>
         </div>
 
-        {/* Center: Clean Minimal Navigation Links (No background) */}
-        <nav className="hidden md:flex items-center gap-6 lg:gap-10 text-[11px] lg:text-[12px] uppercase tracking-[0.2em] font-medium text-[#1A1816]">
+        {/* Center: Clean Minimal Navigation Links */}
+        <nav className="hidden md:flex items-center gap-6 lg:gap-10 text-[11px] lg:text-[12px] uppercase tracking-[0.2em] font-medium">
           {NAV_LINKS.map((link) => {
             const isActive = pathname === link.href;
             return (
               <Link
                 key={link.label}
                 href={link.href}
-                className={`hover:opacity-60 transition-opacity ${
+                className={`hover:opacity-65 transition-opacity ${
                   isActive ? "font-semibold underline underline-offset-4" : "opacity-90"
                 }`}
               >
@@ -51,44 +76,85 @@ export default function Header() {
           })}
         </nav>
 
-        {/* Right: Rate / Search / Account / Cart (No background) */}
-        <div className="flex items-center gap-4 sm:gap-6 text-[10px] sm:text-[11px] lg:text-[12px] uppercase tracking-[0.16em] font-medium text-[#1A1816]">
+        {/* Right: Gold Bullion Ticker + Minimalist SVG Symbols */}
+        <div className="flex items-center gap-4 sm:gap-5 text-[11px] uppercase tracking-[0.16em] font-medium">
           <Link
             href="/admin/rates"
-            className="hidden lg:inline-block hover:opacity-60 transition-opacity tabular"
-            title="Live gold rate"
+            className="hidden lg:inline-block hover:opacity-65 transition-opacity tabular text-xs mr-1"
+            title="Live Bullion Rate"
           >
             INR / 24K <span className="font-semibold">₹8,450/g</span>
           </Link>
 
+          {/* Search SVG Icon */}
           <button
             onClick={() => setSearchOpen(!searchOpen)}
-            className="hover:opacity-60 transition-opacity flex items-center gap-1 cursor-pointer"
-            aria-label="Search"
+            className="p-1.5 hover:opacity-65 transition-opacity cursor-pointer flex items-center justify-center"
+            aria-label="Search Collection"
+            title="Search"
           >
-            <span>Search</span>
+            <svg
+              className={`w-5 h-5 ${strokeColor} fill-none`}
+              viewBox="0 0 24 24"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <line x1="16.5" y1="16.5" x2="21.5" y2="21.5" />
+            </svg>
           </button>
 
+          {/* Account SVG Icon */}
           <Link
             href="/admin/rates"
-            className="hidden sm:inline-block hover:opacity-60 transition-opacity"
+            className="p-1.5 hover:opacity-65 transition-opacity flex items-center justify-center"
+            aria-label="User Account"
+            title="Account / Portal"
           >
-            Account
+            <svg
+              className={`w-5 h-5 ${strokeColor} fill-none`}
+              viewBox="0 0 24 24"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="8" r="4" />
+              <path d="M5.5 20a6.5 6.5 0 0 1 13 0" />
+            </svg>
           </Link>
 
+          {/* Cart SVG Icon */}
           <button
             onClick={openDrawer}
-            className="hover:opacity-60 transition-opacity flex items-center gap-1 cursor-pointer"
+            className="relative p-1.5 hover:opacity-65 transition-opacity cursor-pointer flex items-center justify-center"
+            aria-label="Shopping Bag"
+            title="Shopping Bag"
           >
-            <span>Cart</span>
-            <span className="text-muted tabular">({totalCount})</span>
+            <svg
+              className={`w-5 h-5 ${strokeColor} fill-none`}
+              viewBox="0 0 24 24"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M6 8h12l-1 12H7L6 8z" />
+              <path d="M9 8V6a3 3 0 0 1 6 0v2" />
+            </svg>
+            {totalCount > 0 && (
+              <span
+                className={`absolute -top-0.5 -right-0.5 ${badgeBg} text-[9px] font-mono font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs`}
+              >
+                {totalCount}
+              </span>
+            )}
           </button>
         </div>
       </div>
 
-      {/* Search Bar Overlay */}
+      {/* Expandable Search Drawer */}
       {searchOpen && (
-        <div className="w-full bg-[#FAF8F5]/95 backdrop-blur-md px-5 sm:px-10 py-3 border-y border-black/10 flex items-center justify-between animate-fadeIn">
+        <div className="w-full bg-[#FAF8F5]/95 backdrop-blur-md px-5 sm:px-10 py-3.5 border-y border-black/10 text-[#1A1816] flex items-center justify-between animate-fadeIn">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -98,19 +164,26 @@ export default function Header() {
             }}
             className="flex-1 flex items-center gap-3"
           >
-            <span className="text-[11px] uppercase tracking-wider text-muted font-mono">SEARCH:</span>
+            <svg
+              className="w-4 h-4 stroke-[#8C857B] fill-none shrink-0"
+              viewBox="0 0 24 24"
+              strokeWidth="1.8"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <line x1="16.5" y1="16.5" x2="21.5" y2="21.5" />
+            </svg>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by collection, ring, gold purity..."
-              className="bg-transparent border-b border-black/40 text-xs sm:text-sm py-1 px-2 focus:outline-none focus:border-black w-full max-w-md font-sans"
+              placeholder="Search collections, solitaire rings, polki necklaces, gold purity..."
+              className="bg-transparent border-b border-black/40 text-xs sm:text-sm py-1 px-2 focus:outline-none focus:border-black w-full max-w-md font-sans text-[#1A1816]"
               autoFocus
             />
           </form>
           <button
             onClick={() => setSearchOpen(false)}
-            className="text-[11px] uppercase tracking-widest text-muted hover:text-black ml-4"
+            className="text-[11px] uppercase tracking-widest text-[#5B564F] hover:text-black ml-4"
           >
             Close ✕
           </button>
