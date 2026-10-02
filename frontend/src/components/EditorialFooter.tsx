@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function EditorialFooter() {
   const [email, setEmail] = useState("");
@@ -211,17 +212,15 @@ export default function EditorialFooter() {
             </div>
           </div>
 
-          {/* Right: Giant Bold High-Fashion Brand Wordmark (Exact Reike Nen Look) */}
+          {/* Right: Giant Official Brand Logo */}
           <div className="shrink-0 text-left md:text-right">
-            <div
-              className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight text-[#1A1816] select-none uppercase font-serif"
-              style={{
-                letterSpacing: "-0.04em",
-                lineHeight: "0.85",
-              }}
-            >
-              Shree Rani Gehna
-            </div>
+            <Image
+              src="/media/logo.png"
+              alt="Shree Rani Gehna"
+              width={340}
+              height={85}
+              className="h-10 sm:h-14 lg:h-16 w-auto object-contain select-none"
+            />
           </div>
         </div>
       </div>

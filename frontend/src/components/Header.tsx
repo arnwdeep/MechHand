@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart";
 
@@ -24,8 +25,6 @@ export default function Header() {
   useEffect(() => {
     const handleScroll = () => {
       const y = window.scrollY || 0;
-      // On homepage: show background after scrolling past the full screen hero
-      // On other pages: show background as soon as user scrolls slightly
       const threshold = isHome ? window.innerHeight * 1.8 : 20;
       setIsScrolled(y > threshold);
     };
@@ -35,7 +34,6 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isHome]);
 
-  // Clean, dark typography for visibility across video & pages
   const headerBg = isScrolled
     ? "bg-[#FAF8F5]/95 backdrop-blur-md border-b border-black/10 shadow-xs"
     : "bg-transparent border-none";
@@ -44,19 +42,22 @@ export default function Header() {
     <header
       className={`fixed top-0 inset-x-0 z-50 ${headerBg} text-[#1A1816] transition-all duration-400 pointer-events-auto`}
     >
-      <div className="w-full px-5 sm:px-8 md:px-10 py-4 sm:py-5 flex items-center justify-between gap-4">
-        {/* Left: Bold Luxury Brand Title in Dark Typography */}
+      <div className="w-full px-5 sm:px-8 md:px-10 py-3.5 sm:py-4 flex items-center justify-between gap-4">
+        {/* Left: Official Brand Logo Image */}
         <div className="flex items-center shrink-0">
-          <Link
-            href="/"
-            className="text-lg sm:text-xl md:text-2xl font-black tracking-tight text-[#1A1816] hover:opacity-70 transition-opacity font-serif uppercase select-none"
-            style={{ letterSpacing: "-0.04em", lineHeight: "1" }}
-          >
-            Shree Rani Gehna
+          <Link href="/" className="flex items-center hover:opacity-75 transition-opacity" aria-label="Shree Rani Gehna Home">
+            <Image
+              src="/media/logo.png"
+              alt="Shree Rani Gehna"
+              width={220}
+              height={55}
+              priority
+              className="h-7 sm:h-9 md:h-10 w-auto object-contain"
+            />
           </Link>
         </div>
 
-        {/* Center: Clean Minimal Navigation Links in Dark Typography */}
+        {/* Center: Clean Minimal Navigation Links */}
         <nav className="hidden md:flex items-center gap-6 lg:gap-10 text-[11px] lg:text-[12px] uppercase tracking-[0.2em] font-medium text-[#1A1816]">
           {NAV_LINKS.map((link) => {
             const isActive = pathname === link.href;
@@ -74,7 +75,7 @@ export default function Header() {
           })}
         </nav>
 
-        {/* Right: Gold Bullion Ticker + Minimalist Dark SVG Symbols */}
+        {/* Right: Gold Bullion Ticker + Minimalist SVG Symbols */}
         <div className="flex items-center gap-4 sm:gap-5 text-[11px] uppercase tracking-[0.16em] font-medium text-[#1A1816]">
           <Link
             href="/admin/rates"

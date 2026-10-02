@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Order Confirmed — Shree Rani Gehna",
@@ -18,9 +19,16 @@ export default function CheckoutSuccessPage() {
     <div className="w-full bg-[#FAF8F5] text-[#1A1816] min-h-[80vh] pt-28 pb-24 flex items-center justify-center">
       <div className="max-w-2xl w-full mx-auto px-5 sm:px-8">
         <div className="bg-[#F4F1EA] border border-black/15 p-8 sm:p-12 text-center space-y-8 rounded-xs shadow-sm">
-          {/* Royal Seal Monogram */}
-          <div className="mx-auto w-16 h-16 rounded-full border border-black/20 bg-white flex items-center justify-center text-xl font-serif font-black text-[#1A1816]">
-            SRG
+          {/* Royal Brand Logo */}
+          <div className="flex justify-center">
+            <Image
+              src="/media/logo.png"
+              alt="Shree Rani Gehna"
+              width={260}
+              height={65}
+              priority
+              className="h-10 w-auto object-contain mx-auto"
+            />
           </div>
 
           <div>
