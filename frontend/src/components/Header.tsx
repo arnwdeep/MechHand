@@ -1,191 +1,188 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useState } from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { useCart } from "@/lib/cart";
 
-const NAV_LINKS = [
-  { href: "/products?category=rings", label: "Rings" },
-  { href: "/products?category=necklaces", label: "Necklaces" },
-  { href: "/products?category=earrings", label: "Earrings" },
-  { href: "/products", label: "High Jewellery" },
-  { href: "/discover", label: "Discover" },
-];
-
 export default function Header() {
-  const pathname = usePathname();
-  const isHome = pathname === "/";
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [accountOpen, setAccountOpen] = useState(false);
   const { totalCount, openDrawer } = useCart();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const y = window.scrollY || 0;
-      const threshold = isHome ? window.innerHeight * 1.8 : 20;
-      setIsScrolled(y > threshold);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [isHome]);
-
-  const headerBg = isScrolled
-    ? "bg-[#FAF8F5]/95 backdrop-blur-md border-b border-black/10 shadow-xs"
-    : "bg-transparent border-none";
-
   return (
-    <header
-      className={`fixed top-0 inset-x-0 z-50 ${headerBg} text-[#1A1816] transition-all duration-400 pointer-events-auto`}
-    >
-      <div className="w-full px-5 sm:px-8 md:px-10 py-3.5 sm:py-4 flex items-center justify-between gap-4">
-        {/* Left: Official Brand Logo Image */}
-        <div className="flex items-center shrink-0">
-          <Link href="/" className="flex items-center hover:opacity-75 transition-opacity" aria-label="Shree Rani Gehna Home">
-            <Image
-              src="/media/logo.png"
-              alt="Shree Rani Gehna"
-              width={220}
-              height={55}
-              priority
-              className="h-7 sm:h-9 md:h-10 w-auto object-contain"
-            />
+    <>
+      {/* Floating iOS Liquid Glass Header - Transparent Dark (No Shadow) */}
+      <header className="fixed top-3 sm:top-4.5 inset-x-0 z-50 flex justify-center px-3 sm:px-6 pointer-events-none">
+        <div
+          className="w-full max-w-5xl rounded-full px-4 sm:px-6 py-1.5 sm:py-2 flex items-center justify-between pointer-events-auto border border-white/10 bg-black/25 backdrop-blur-[6px] shadow-none transition-all duration-300"
+          style={{
+            WebkitBackdropFilter: "blur(6px)",
+          }}
+        >
+          {/* Left: Futuristic Chrome Brand Logo */}
+          <Link
+            href="/"
+            className="flex items-center group transition-transform duration-300 hover:scale-105"
+            aria-label="Home"
+          >
+            <div className="relative h-7 sm:h-8 md:h-9 w-auto aspect-[3/1] max-w-[140px] sm:max-w-[180px] flex items-center">
+              <Image
+                src="/media/brand-logo.png"
+                alt="Brand Logo"
+                fill
+                sizes="(max-width: 768px) 140px, 180px"
+                className="object-contain object-left drop-shadow-none"
+                priority
+              />
+            </div>
           </Link>
-        </div>
 
-        {/* Center: Clean Minimal Navigation Links */}
-        <nav className="hidden md:flex items-center gap-6 lg:gap-10 text-[11px] lg:text-[12px] uppercase tracking-[0.2em] font-medium text-[#1A1816]">
-          {NAV_LINKS.map((link) => {
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={`hover:opacity-60 transition-opacity ${
-                  isActive ? "font-semibold underline underline-offset-4" : "opacity-90"
-                }`}
+          {/* Middle: Categories in Small Helvetica Font */}
+          <nav
+            className="flex items-center gap-3 sm:gap-5 md:gap-6 text-[9.5px] sm:text-[10.5px] uppercase tracking-[0.16em] font-normal text-white/70 select-none"
+            style={{ fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}
+          >
+            <a
+              href="#categories"
+              className="hover:text-white transition-colors duration-200 font-medium text-white/95"
+            >
+              CATEGORIES
+            </a>
+            <span className="hidden md:inline-block text-white/30 text-[8px]">&bull;</span>
+            <a
+              href="#categories"
+              className="hidden md:inline-block hover:text-white transition-colors duration-200"
+            >
+              KIMONOS
+            </a>
+            <a
+              href="#categories"
+              className="hidden md:inline-block hover:text-white transition-colors duration-200"
+            >
+              JERSEYS
+            </a>
+            <a
+              href="#categories"
+              className="hidden lg:inline-block hover:text-white transition-colors duration-200"
+            >
+              KNITWEAR
+            </a>
+            <a
+              href="#categories"
+              className="hidden sm:inline-block hover:text-white transition-colors duration-200"
+            >
+              ARCHIVE
+            </a>
+          </nav>
+
+          {/* Right: Only 3D Chrome Icons for Account & Cart */}
+          <div className="flex items-center gap-1.5 sm:gap-2.5 text-white">
+            {/* Account Icon */}
+            <button
+              onClick={() => setAccountOpen(true)}
+              className="relative p-1.5 sm:p-2 rounded-full hover:bg-white/15 active:scale-95 transition-all duration-200 cursor-pointer group flex items-center justify-center"
+              aria-label="Account"
+              title="Account"
+            >
+              <div className="relative w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                <Image
+                  src="/media/icons/acc-icon.png"
+                  alt="Account"
+                  fill
+                  sizes="32px"
+                  className="object-contain"
+                />
+              </div>
+            </button>
+
+            {/* Cart Icon with plain white number */}
+            <button
+              onClick={openDrawer}
+              className="relative p-1.5 sm:p-2 rounded-full hover:bg-white/15 active:scale-95 transition-all duration-200 cursor-pointer group flex items-center justify-center gap-1.5"
+              aria-label="Cart"
+              title="Cart"
+            >
+              <div className="relative w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                <Image
+                  src="/media/icons/cart-icon.png"
+                  alt="Cart"
+                  fill
+                  sizes="32px"
+                  className="object-contain"
+                />
+              </div>
+
+              {totalCount > 0 && (
+                <span className="text-[11px] font-sans font-medium text-white tabular select-none leading-none pr-0.5">
+                  {totalCount}
+                </span>
+              )}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Silver / White Themed Account Modal */}
+      {accountOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-md bg-[#121316] border border-white/20 rounded-xl p-6 sm:p-8 text-white relative"
+          >
+            <button
+              onClick={() => setAccountOpen(false)}
+              className="absolute top-4 right-4 text-white/60 hover:text-white text-xs uppercase tracking-widest p-2 cursor-pointer transition-colors"
+            >
+              ✕
+            </button>
+
+            <div className="text-center mb-6">
+              <div className="mx-auto mb-3 relative w-14 h-14 flex items-center justify-center">
+                <Image
+                  src="/media/icons/acc-icon.png"
+                  alt="Account"
+                  fill
+                  sizes="56px"
+                  className="object-contain"
+                />
+              </div>
+              <h3 className="text-base font-normal tracking-wide text-white uppercase">
+                Client Portal
+              </h3>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-white/60 mt-1 font-normal">
+                Access Private Commissions &amp; Orders
+              </p>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setAccountOpen(false);
+              }}
+              className="space-y-4"
+            >
+              <div>
+                <label className="text-[10px] uppercase tracking-[0.2em] text-white/70 block mb-1.5 font-normal">
+                  Mobile Number / Email
+                </label>
+                <input
+                  type="text"
+                  placeholder="+91 98765 43210"
+                  required
+                  className="w-full bg-white/5 border border-white/15 rounded-lg px-3.5 py-2 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-white/60 transition-colors font-mono"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-2.5 rounded-lg bg-white text-black font-semibold text-xs uppercase tracking-[0.2em] hover:opacity-90 transition-opacity cursor-pointer"
               >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Right: Gold Bullion Ticker + Minimalist SVG Symbols */}
-        <div className="flex items-center gap-4 sm:gap-5 text-[11px] uppercase tracking-[0.16em] font-medium text-[#1A1816]">
-          <Link
-            href="/admin/rates"
-            className="hidden lg:inline-block hover:opacity-60 transition-opacity tabular text-xs mr-1 text-[#1A1816]"
-            title="Live Bullion Rate"
-          >
-            INR / 24K <span className="font-semibold">₹8,450/g</span>
-          </Link>
-
-          {/* Search SVG Icon */}
-          <button
-            onClick={() => setSearchOpen(!searchOpen)}
-            className="p-1.5 hover:opacity-60 transition-opacity cursor-pointer flex items-center justify-center"
-            aria-label="Search Collection"
-            title="Search"
-          >
-            <svg
-              className="w-5 h-5 stroke-[#1A1816] fill-none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="7" />
-              <line x1="16.5" y1="16.5" x2="21.5" y2="21.5" />
-            </svg>
-          </button>
-
-          {/* Account SVG Icon */}
-          <Link
-            href="/admin/rates"
-            className="p-1.5 hover:opacity-60 transition-opacity flex items-center justify-center"
-            aria-label="User Account"
-            title="Account / Portal"
-          >
-            <svg
-              className="w-5 h-5 stroke-[#1A1816] fill-none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="8" r="4" />
-              <path d="M5.5 20a6.5 6.5 0 0 1 13 0" />
-            </svg>
-          </Link>
-
-          {/* Cart SVG Icon */}
-          <button
-            onClick={openDrawer}
-            className="relative p-1.5 hover:opacity-60 transition-opacity cursor-pointer flex items-center justify-center"
-            aria-label="Shopping Bag"
-            title="Shopping Bag"
-          >
-            <svg
-              className="w-5 h-5 stroke-[#1A1816] fill-none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M6 8h12l-1 12H7L6 8z" />
-              <path d="M9 8V6a3 3 0 0 1 6 0v2" />
-            </svg>
-            {totalCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 bg-[#1A1816] text-[#FAF8F5] text-[9px] font-mono font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
-                {totalCount}
-              </span>
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Expandable Search Drawer */}
-      {searchOpen && (
-        <div className="w-full bg-[#FAF8F5]/95 backdrop-blur-md px-5 sm:px-10 py-3.5 border-y border-black/10 text-[#1A1816] flex items-center justify-between animate-fadeIn">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (searchQuery.trim()) {
-                window.location.href = `/products?q=${encodeURIComponent(searchQuery)}`;
-              }
-            }}
-            className="flex-1 flex items-center gap-3"
-          >
-            <svg
-              className="w-4 h-4 stroke-[#8C857B] fill-none shrink-0"
-              viewBox="0 0 24 24"
-              strokeWidth="1.8"
-            >
-              <circle cx="11" cy="11" r="7" />
-              <line x1="16.5" y1="16.5" x2="21.5" y2="21.5" />
-            </svg>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search collections, solitaire rings, polki necklaces, gold purity..."
-              className="bg-transparent border-b border-black/40 text-xs sm:text-sm py-1 px-2 focus:outline-none focus:border-black w-full max-w-md font-sans text-[#1A1816]"
-              autoFocus
-            />
-          </form>
-          <button
-            onClick={() => setSearchOpen(false)}
-            className="text-[11px] uppercase tracking-widest text-[#5B564F] hover:text-black ml-4"
-          >
-            Close ✕
-          </button>
+                Send Access Code
+              </button>
+            </form>
+          </div>
         </div>
       )}
-    </header>
+    </>
   );
 }
