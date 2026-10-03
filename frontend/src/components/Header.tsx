@@ -3,11 +3,21 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useCart } from "@/lib/cart";
 
 export default function Header() {
   const [accountOpen, setAccountOpen] = useState(false);
-  const { totalCount, openDrawer } = useCart();
+
+  const handleSelectSpecimen = (specimenId: string) => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("select-specimen", { detail: specimenId })
+      );
+      const el = document.getElementById("hand-carousel");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
 
   return (
     <>
@@ -19,54 +29,54 @@ export default function Header() {
             WebkitBackdropFilter: "blur(6px)",
           }}
         >
-          {/* Left: Futuristic Chrome Brand Logo */}
+          {/* Left: Streetwear Wide Typography MECHHAND Logo */}
           <Link
             href="/"
-            className="flex items-center group transition-transform duration-300 hover:scale-105"
-            aria-label="Home"
+            className="flex items-center group transition-transform duration-300 hover:scale-105 select-none pl-1"
+            aria-label="MECHHAND"
           >
-            <div className="relative h-7 sm:h-8 md:h-9 w-auto aspect-[3/1] max-w-[140px] sm:max-w-[180px] flex items-center">
-              <Image
-                src="/media/brand-logo.png"
-                alt="Brand Logo"
-                fill
-                sizes="(max-width: 768px) 140px, 180px"
-                className="object-contain object-left drop-shadow-none"
-                priority
-              />
-            </div>
+            <span
+              className="text-[13px] sm:text-[14px] md:text-[15px] font-black uppercase tracking-[-0.03em] sm:tracking-[-0.02em] text-white leading-none inline-block transform scale-y-90"
+              style={{
+                fontFamily: 'var(--font-syne), "Helvetica Neue", Arial, sans-serif',
+                fontWeight: 800,
+              }}
+            >
+              MECHHAND
+            </span>
           </Link>
 
-          {/* Middle: Categories in Small Helvetica Font */}
+          {/* Middle: Cybernetic Hand Categories in Small Helvetica Font */}
           <nav
             className="flex items-center gap-3 sm:gap-5 md:gap-6 text-[9.5px] sm:text-[10.5px] uppercase tracking-[0.16em] font-normal text-white/70 select-none"
             style={{ fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}
           >
             <a
-              href="#categories"
+              href="#hand-carousel"
               className="hover:text-white transition-colors duration-200 font-medium text-white/95"
             >
-              CATEGORIES
+              SPECIMENS
             </a>
             <span className="hidden md:inline-block text-white/30 text-[8px]">&bull;</span>
-            <a
-              href="#categories"
-              className="hidden md:inline-block hover:text-white transition-colors duration-200"
+            <button
+              onClick={() => handleSelectSpecimen("rock")}
+              className="hidden md:inline-block hover:text-white transition-colors duration-200 cursor-pointer"
             >
-              KIMONOS
-            </a>
-            <a
-              href="#categories"
-              className="hidden md:inline-block hover:text-white transition-colors duration-200"
+              ROCK
+            </button>
+            <button
+              onClick={() => handleSelectSpecimen("skin")}
+              className="hidden md:inline-block hover:text-white transition-colors duration-200 cursor-pointer"
             >
-              JERSEYS
-            </a>
-            <a
-              href="#categories"
-              className="hidden lg:inline-block hover:text-white transition-colors duration-200"
+              SKIN
+            </button>
+            <button
+              onClick={() => handleSelectSpecimen("bone")}
+              className="hidden lg:inline-block hover:text-white transition-colors duration-200 cursor-pointer"
             >
-              KNITWEAR
-            </a>
+              BONE
+            </button>
+            <span className="hidden sm:inline-block text-white/30 text-[8px]">&bull;</span>
             <a
               href="#categories"
               className="hidden sm:inline-block hover:text-white transition-colors duration-200"
@@ -75,13 +85,12 @@ export default function Header() {
             </a>
           </nav>
 
-          {/* Right: Only 3D Chrome Icons for Account & Cart */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5 text-white">
-            {/* Account Icon */}
+          {/* Right: Fluid Liquid Transparent Account Button (No Circle) */}
+          <div className="flex items-center text-white pr-1">
             <button
               onClick={() => setAccountOpen(true)}
-              className="relative p-1.5 sm:p-2 rounded-full hover:bg-white/15 active:scale-95 transition-all duration-200 cursor-pointer group flex items-center justify-center"
-              aria-label="Account"
+              className="relative p-1 opacity-85 hover:opacity-100 active:scale-95 transition-all duration-300 cursor-pointer group flex items-center justify-center bg-transparent border-0 shadow-none"
+              aria-label="Account Portal"
               title="Account"
             >
               <div className="relative w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
@@ -93,30 +102,6 @@ export default function Header() {
                   className="object-contain"
                 />
               </div>
-            </button>
-
-            {/* Cart Icon with plain white number */}
-            <button
-              onClick={openDrawer}
-              className="relative p-1.5 sm:p-2 rounded-full hover:bg-white/15 active:scale-95 transition-all duration-200 cursor-pointer group flex items-center justify-center gap-1.5"
-              aria-label="Cart"
-              title="Cart"
-            >
-              <div className="relative w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-                <Image
-                  src="/media/icons/cart-icon.png"
-                  alt="Cart"
-                  fill
-                  sizes="32px"
-                  className="object-contain"
-                />
-              </div>
-
-              {totalCount > 0 && (
-                <span className="text-[11px] font-sans font-medium text-white tabular select-none leading-none pr-0.5">
-                  {totalCount}
-                </span>
-              )}
             </button>
           </div>
         </div>
