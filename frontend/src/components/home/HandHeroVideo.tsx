@@ -117,6 +117,7 @@ export default function HandHeroVideo({
 
   return (
     <section
+      id="hero"
       ref={containerRef}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}

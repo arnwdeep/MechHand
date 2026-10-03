@@ -1,11 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Header() {
   const [accountOpen, setAccountOpen] = useState(false);
+
+  // Force scroll to top on refresh / load
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if ("scrollRestoration" in window.history) {
+        window.history.scrollRestoration = "manual";
+      }
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
+  const handleScrollToTop = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      if (window.location.hash) {
+        window.history.pushState(null, "", window.location.pathname);
+      }
+    }
+  };
 
   const handleSelectSpecimen = (specimenId: string) => {
     if (typeof window !== "undefined") {
@@ -32,11 +52,12 @@ export default function Header() {
           {/* Left: Streetwear Wide Typography MECHHAND Logo */}
           <Link
             href="/"
-            className="flex items-center group transition-transform duration-300 hover:scale-105 select-none pl-1"
+            onClick={handleScrollToTop}
+            className="flex items-center group transition-transform duration-300 hover:scale-105 select-none pl-1 cursor-pointer"
             aria-label="MECHHAND"
           >
             <span
-              className="text-[13px] sm:text-[14px] md:text-[15px] font-black uppercase tracking-[-0.03em] sm:tracking-[-0.02em] text-white leading-none inline-block transform scale-y-90"
+              className="text-[13px] sm:text-[14px] md:text-[15px] font-black uppercase tracking-[-0.03em] sm:tracking-[-0.02em] text-white leading-none inline-block transform scale-y-90 cursor-pointer"
               style={{
                 fontFamily: 'var(--font-syne), "Helvetica Neue", Arial, sans-serif',
                 fontWeight: 800,
