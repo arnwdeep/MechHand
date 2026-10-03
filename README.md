@@ -3,7 +3,7 @@
 > **Next.js 16 Storefront & 3D Interactive Specimen Showcase**  
 > Exploring biological kinetics, cold-drawn titanium rigging, extraterrestrial meteoric inlays, and minimal Swiss editorial typography.
 
-[![Deployment](https://img.shields.io/badge/Deployment-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://mech-hand.vercel.app)
+[![Deployment](https://img.shields.io/badge/Deployment-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://frontend-sigma-gray-7gdvnf0u5o.vercel.app)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/arnwdeep/MechHand)
 [![Next.js 16](https://img.shields.io/badge/Framework-Next.js%2016-black?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![Tailwind CSS v4](https://img.shields.io/badge/Styling-Tailwind%20v4-38bdf8?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
@@ -13,7 +13,8 @@
 
 ## 🌐 Live Deployments
 
-- **Production URL:** [https://mech-hand.vercel.app](https://mech-hand.vercel.app)
+- **Production URL:** [https://frontend-sigma-gray-7gdvnf0u5o.vercel.app](https://frontend-sigma-gray-7gdvnf0u5o.vercel.app)
+- **Deployment Mirror:** [https://frontend-h10n13m8j-arnadeep.vercel.app](https://frontend-h10n13m8j-arnadeep.vercel.app)
 - **Repository:** [https://github.com/arnwdeep/MechHand](https://github.com/arnwdeep/MechHand)
 - **Local Preview:** `http://localhost:3005`
 
